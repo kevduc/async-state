@@ -6,14 +6,20 @@ import { useEffect, useState } from "react";
 import { getUsers } from "@/services/users";
 import type { User } from "@/services/user.types";
 import { Spinner } from "@/components/ui/Spinner";
+import { Alert } from "@/components/ui/Alert";
 
 export function App() {
   const [users, setUsers] = useState<User[] | undefined>(undefined);
+  const [error, setError] = useState<unknown>(undefined);
 
   useEffect(() => {
     async function fetchUsers() {
-      const users = await getUsers();
-      setUsers(users);
+      try {
+        const users = await getUsers();
+        setUsers(users);
+      } catch (error) {
+        setError(error);
+      }
     }
 
     fetchUsers();
@@ -23,7 +29,11 @@ export function App() {
     <Container>
       <Title>Users</Title>
       {users === undefined ? (
-        <Spinner />
+        error === undefined ? (
+          <Spinner />
+        ) : (
+          <Alert error={error} />
+        )
       ) : (
         <Flex>
           {users.map((user) => (
