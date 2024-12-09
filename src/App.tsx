@@ -12,12 +12,19 @@ import { Button } from "@/components/ui/Button";
 export function App() {
   const [users, setUsers] = useState<User[] | undefined>(undefined);
   const [error, setError] = useState<unknown>(undefined);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function fetchUsers() {
     try {
+      setError(undefined);
+      setIsLoading(true);
+
       const users = await getUsers();
+
+      setIsLoading(false);
       setUsers(users);
     } catch (error) {
+      setIsLoading(false);
       setError(error);
     }
   }
@@ -29,20 +36,20 @@ export function App() {
   return (
     <Container>
       <Title>Users</Title>
-      {users === undefined ? (
-        error === undefined ? (
-          <Spinner />
-        ) : (
-          <Alert error={error} />
-        )
+      {isLoading ? (
+        <Spinner />
+      ) : error !== undefined ? (
+        <Alert error={error} />
       ) : (
         <>
           <Button onClick={fetchUsers}>Refresh</Button>
-          <Flex>
-            {users.map((user) => (
-              <UserCard key={user.id} user={user} />
-            ))}
-          </Flex>
+          {users !== undefined ? (
+            <Flex>
+              {users.map((user) => (
+                <UserCard key={user.id} user={user} />
+              ))}
+            </Flex>
+          ) : null}
         </>
       )}
     </Container>
