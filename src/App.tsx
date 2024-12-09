@@ -7,21 +7,22 @@ import { getUsers } from "@/services/users";
 import type { User } from "@/services/user.types";
 import { Spinner } from "@/components/ui/Spinner";
 import { Alert } from "@/components/ui/Alert";
+import { Button } from "@/components/ui/Button";
 
 export function App() {
   const [users, setUsers] = useState<User[] | undefined>(undefined);
   const [error, setError] = useState<unknown>(undefined);
 
-  useEffect(() => {
-    async function fetchUsers() {
-      try {
-        const users = await getUsers();
-        setUsers(users);
-      } catch (error) {
-        setError(error);
-      }
+  async function fetchUsers() {
+    try {
+      const users = await getUsers();
+      setUsers(users);
+    } catch (error) {
+      setError(error);
     }
+  }
 
+  useEffect(() => {
     fetchUsers();
   }, []);
 
@@ -35,11 +36,14 @@ export function App() {
           <Alert error={error} />
         )
       ) : (
-        <Flex>
-          {users.map((user) => (
-            <UserCard key={user.id} user={user} />
-          ))}
-        </Flex>
+        <>
+          <Button onClick={fetchUsers}>Refresh</Button>
+          <Flex>
+            {users.map((user) => (
+              <UserCard key={user.id} user={user} />
+            ))}
+          </Flex>
+        </>
       )}
     </Container>
   );
