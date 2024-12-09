@@ -3,7 +3,7 @@ import type { User } from "./user.types";
 
 type UsersDto = { users: User[] };
 
-export async function getUsers() {
+export async function getUsers(withError = false) {
   console.log("Fetching users...");
   await pause(5000); // simulate long loading time
 
@@ -11,5 +11,7 @@ export async function getUsers() {
     res.json(),
   )) as UsersDto;
 
-  return data.users;
+  if (withError) throw new Error("getUsers error");
+
+  return data.users.sort(() => Math.random() * 2 - 1);
 }

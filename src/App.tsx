@@ -14,12 +14,12 @@ export function App() {
   const [error, setError] = useState<unknown>(undefined);
   const [isLoading, setIsLoading] = useState(false);
 
-  async function fetchUsers() {
+  async function fetchUsers(withError = false) {
     try {
       setError(undefined);
       setIsLoading(true);
 
-      const users = await getUsers();
+      const users = await getUsers(withError);
 
       setIsLoading(false);
       setUsers(users);
@@ -38,20 +38,23 @@ export function App() {
       <Title>Users</Title>
       {isLoading ? (
         <Spinner />
-      ) : error !== undefined ? (
-        <Alert error={error} />
       ) : (
-        <>
-          <Button onClick={fetchUsers}>Refresh</Button>
-          {users !== undefined ? (
-            <Flex>
-              {users.map((user) => (
-                <UserCard key={user.id} user={user} />
-              ))}
-            </Flex>
-          ) : null}
-        </>
+        <Flex>
+          <Button onClick={() => fetchUsers(false)}>Refresh</Button>
+          <Button variant="error" onClick={() => fetchUsers(true)}>
+            Refresh with error
+          </Button>
+        </Flex>
       )}
+
+      {error !== undefined ? <Alert error={error} /> : null}
+      {users !== undefined ? (
+        <Flex>
+          {users.map((user) => (
+            <UserCard key={user.id} user={user} />
+          ))}
+        </Flex>
+      ) : null}
     </Container>
   );
 }

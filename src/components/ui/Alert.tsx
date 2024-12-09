@@ -4,7 +4,8 @@ type AlertProps = {
 
 export function Alert({ error }: AlertProps) {
   return (
-    <p className="max-w-fit rounded-lg bg-red-800 px-4 py-2 font-medium text-stone-100 shadow hover:bg-red-900">
+    <p className="mt-6 max-w-fit py-2 pe-2 ps-1 font-medium text-red-400 hover:bg-red-900">
+      ⚠️{" "}
       {error instanceof Error
         ? `Error: ${error.message}`
         : "Something went wrong"}
