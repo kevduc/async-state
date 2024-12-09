@@ -8,7 +8,7 @@ import type { User } from "@/services/user.types";
 import { Spinner } from "@/components/ui/Spinner";
 
 export function App() {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<User[] | undefined>(undefined);
 
   useEffect(() => {
     async function fetchUsers() {
@@ -22,7 +22,7 @@ export function App() {
   return (
     <Container>
       <Title>Users</Title>
-      {users.length === 0 ? (
+      {users === undefined ? (
         <Spinner />
       ) : (
         <Flex>
